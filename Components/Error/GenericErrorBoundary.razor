@@ -1,0 +1,13 @@
+<ErrorBoundary>
+    <ChildContent>
+        @ChildContent
+    </ChildContent>
+    <ErrorContent Context="ex">
+        <div class="p-4">
+            <Alert Color="Color.Danger" Visible="true">
+                <AlertMessage>An error has occurred</AlertMessage>
+                <AlertDescription>@ex.Message</AlertDescription>
+            </Alert>
+        </div>
+    </ErrorContent>
+</ErrorBoundary>

@@ -1,0 +1,14 @@
+<Toaster>
+    <Toast Visible="@Visible" VisibleChanged="@OnVisibleChanged">
+        <ToastHeader>
+            <Strong Margin="Margin.IsAuto.FromEnd">
+                @Header
+            </Strong>
+            @* <Small>11 mins ago</Small> *@
+            <CloseButton />
+        </ToastHeader>
+        <ToastBody>
+            @Body
+        </ToastBody>
+    </Toast>
+</Toaster>
