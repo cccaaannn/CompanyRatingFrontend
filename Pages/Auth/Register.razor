@@ -1,0 +1,68 @@
+@page "/auth/register"
+
+<PageTitle>Register</PageTitle>
+
+<Div Flex="Flex.JustifyContent.Center" Margin="Margin.Is3.FromBottom" Padding="Padding.Is5.OnAll">
+    <Form Model="Vm.Request" @onsubmit="HandleSubmit">
+        <Validations @ref="_validations" Model="Vm.Request" Mode="ValidationMode.Auto">
+            <Field>
+                <FieldLabel>Name</FieldLabel>
+                <FieldBody>
+                    <TextEdit type="text" Placeholder="Enter name" @bind-Text="Vm.Request.Name">
+                        <Feedback>
+                            <ValidationError/>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+
+            <Field>
+                <FieldLabel>Surname</FieldLabel>
+                <FieldBody>
+                    <TextEdit type="text" Placeholder="Enter surname" @bind-Text="Vm.Request.Surname">
+                        <Feedback>
+                            <ValidationError/>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+
+            <Field>
+                <FieldLabel>Email</FieldLabel>
+                <FieldBody>
+                    <TextEdit type="email" Placeholder="Enter email" @bind-Text="Vm.Request.Email">
+                        <Feedback>
+                            <ValidationError/>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+
+            <Field>
+                <FieldLabel>Password</FieldLabel>
+                <FieldBody>
+                    <TextEdit type="password" Placeholder="Enter password" @bind-Text="Vm.Request.Password">
+                        <Feedback>
+                            <ValidationError/>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+
+            <Blazorise.ValidationSummary/>
+
+            @if (!string.IsNullOrWhiteSpace(Vm.Error))
+            {
+                <Alert Color="Color.Danger">@Vm.Error</Alert>
+            }
+
+            <Button Color="Color.Primary" Type="@ButtonType.Submit" Disabled="@Vm.IsBusy" Loading="@Vm.IsBusy">
+                @(Vm.IsBusy ? "Registering..." : "Register")
+            </Button>
+
+            <Paragraph Class="mt-3">
+                Already have an account? <Link To="/auth/login">Login here</Link>
+            </Paragraph>
+        </Validations>
+    </Form>
+</Div>
