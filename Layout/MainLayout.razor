@@ -1,0 +1,19 @@
+﻿@inherits LayoutComponentBase
+
+<Blazorise.ThemeProvider Theme="@ThemeManager.ActiveTheme">
+    <div class="flex-col min-vh-100">
+        <Layout>
+            <LayoutHeader>
+                <NavMenu />
+            </LayoutHeader>
+            <LayoutContent>
+                <main class="mx-4 my-4">
+                    @Body
+                </main>
+            </LayoutContent>
+            <LayoutFooter>
+                Footer test
+            </LayoutFooter>
+        </Layout>
+    </div>
+</Blazorise.ThemeProvider>

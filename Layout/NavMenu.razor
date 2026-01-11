@@ -1,0 +1,54 @@
+﻿<Bar Breakpoint="Breakpoint.Desktop"
+     Background="Background.Dark"
+     ThemeContrast="ThemeContrast.Dark">
+    <BarItem>
+        <Button TextColor="TextColor.White" Type="ButtonType.Link" To="/">
+            <Icon Name="IconName.Building" TextColor="TextColor.Primary" TextSize="TextSize.Heading3" />
+        </Button>
+    </BarItem>
+    <BarToggler/>
+    <BarMenu>
+        <BarStart>
+            <BarItem>
+                <BarLink To="/">Home</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To="/companies" Match="Match.Prefix">Companies</BarLink>
+            </BarItem>
+            @if (AccessTokenManager.IsAdmin)
+            {
+                <BarItem>
+                    <BarLink To="/create">Create Company</BarLink>
+                </BarItem>
+            }
+        </BarStart>
+        <BarEnd>
+            <BarItem>
+                <Button Clicked="@ThemeManager.OnThemeChanged" Margin="Margin.Is4.FromEnd" Class="h-full">
+                    @if (ThemeManager.IsDark)
+                    {
+                        <Icon Name="IconName.Moon" TextColor="TextColor.Primary"/>
+                    }
+                    else
+                    {
+                        <Icon Name="IconName.Sun" TextColor="TextColor.Primary"/>
+                    }
+                </Button>
+            </BarItem>
+            <BarItem>
+                @if (!IsAuthenticated)
+                {
+                    <Button Color="Color.Primary" Type="ButtonType.Link" To="/auth/login">Login</Button>
+                    <Button Color="Color.Secondary" Type="ButtonType.Link" To="/auth/register">Register</Button>
+                }
+                else
+                {
+                    <Div class="flex items-center gap-4">
+                        <Heading Size="HeadingSize.Is6">@UserEmail</Heading>
+                        <Button Color="Color.Danger" Outline Clicked="Logout">Logout</Button>
+                    </Div>
+                }
+            </BarItem>
+        </BarEnd>
+    </BarMenu>
+</Bar>
