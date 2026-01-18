@@ -1,0 +1,123 @@
+﻿@page "/companies"
+@using CompanyRatingFrontend.Components.Toast
+@using CompanyRatingFrontend.Data
+@using CompanyRatingFrontend.Data.Company
+@using CompanyRatingFrontend.Pages.Companies.Components
+@using SortDirection = CompanyRatingFrontend.Data.SortDirection
+@implements IDisposable
+
+<PageTitle>Companies</PageTitle>
+
+<div>
+    <Heading TextColor="TextColor.Primary" Size="HeadingSize.Is1">
+        Companies
+    </Heading>
+
+    <div class="flex gap-2 my-4 justify-start items-center flex-wrap">
+        <TextEdit
+            Placeholder="Search Name..."
+            Text="@Vm.DebouncedNameFilter"
+            TextChanged="@(EventCallback.Factory.Create<string>(this, OnNameFilterChanged))"
+            class="h-[55px]"
+            Width="Width.Px(300)"/>
+
+        <Select
+            SelectedValues="@(Vm.SearchQuery.Industries?.AsReadOnly() ?? (IReadOnlyList<CompanyIndustry>)[])"
+            SelectedValuesChanged="@(EventCallback.Factory.Create<IReadOnlyList<CompanyIndustry>>(this, OnIndustriesFilterChanged))"
+            Multiple
+            class="h-[55px]"
+            Width="Width.Px(200)">
+            @foreach (var industry in Enum.GetValues<CompanyIndustry>())
+            {
+                <SelectItem Value="@industry">@industry.ToDisplayString()</SelectItem>
+            }
+        </Select>
+
+        <Select
+            SelectedValue="@(Vm.SearchQuery.SortDirection ?? SortDirection.Ascending)"
+            SelectedValueChanged="@(EventCallback.Factory.Create<SortDirection>(this, OnSortDirectionFilterChanged))"
+            class="h-[55px]"
+            Width="Width.Px(150)">
+            @foreach (var direction in Enum.GetValues<SortDirection>())
+            {
+                <SelectItem Value="@direction">@direction.ToDisplayString()</SelectItem>
+            }
+        </Select>
+
+        <Select
+            SelectedValue="@Vm.SearchQuery.SortBy"
+            SelectedValueChanged="@(EventCallback.Factory.Create<string?>(this, OnSortByFilterChanged))"
+            class="h-[55px]"
+            Width="Width.Px(150)">
+            @foreach (var fields in SortByCompanyField.AllFields)
+            {
+                <SelectItem Value="@fields">@fields</SelectItem>
+            }
+        </Select>
+
+        <Button
+            Color="Color.Secondary"
+            @onclick="ClearFilters"
+            class="h-[55px]">
+            Clear
+        </Button>
+    </div>
+
+    @if (Vm.CompaniesResponse.IsLoading)
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+            @for (var i = 0; i < SkeletonCount; i++)
+            {
+                <CompanyCardSkeleton />
+            }
+        </div>
+    }
+    else if (Vm.CompaniesResponse.IsError)
+    {
+        <div class="flex justify-center items-center w-full h-64">
+            <p class="text-red-600 text-lg">
+                An error occurred while loading companies. Please try again later.
+            </p>
+        </div>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+            @foreach (var company in Vm.Companies)
+            {
+                <CompanyCard
+                    Company="@company"
+                    OnRatingChanged="@((int rate) => OnRateChanged(company.Id, rate))"
+                    OnDelete="@(() => OnDelete(company.Id))"
+                    OnEdit="@OnEdit"
+                    IsAdmin="AccessTokenManager.IsAdmin"
+                />
+            }
+        </div>
+
+        @if (Vm.HasNext)
+        {
+            <div class="flex content-center w-full justify-center mb-4">
+                <Button Color="Color.Primary" @onclick="OnLoadMore" disabled="@Vm.CompaniesResponse.IsLoading">Load more</Button>
+            </div>
+        }
+    }
+
+    <GenericToast
+        Header="Rated"
+        @bind-Visible="Vm.RatedToastVisible"
+    >
+        <Body>
+        You have successfully rated the company.
+        </Body>
+    </GenericToast>
+
+    <GenericToast
+        Header="Error"
+        @bind-Visible="Vm.ErrorToastVisible"
+    >
+        <Body>
+        An error occurred while submitting your request.
+        </Body>
+    </GenericToast>
+</div>
