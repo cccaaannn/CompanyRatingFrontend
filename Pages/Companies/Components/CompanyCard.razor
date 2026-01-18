@@ -1,0 +1,68 @@
+@using CompanyRatingFrontend.Data.Company
+<Card>
+    <CardBody>
+        <CardHeader>
+            @Company.Industry.ToDisplayString()
+        </CardHeader>
+
+        <CardImage
+            Source="@(!string.IsNullOrEmpty(Company.LogoUrl) ? Company.LogoUrl : "placeholder-company.svg")"
+            Alt="Company image"
+            Width="Width.Px(150)"
+        />
+        <CardBody>
+            <CardTitle>
+                @Company.Name
+            </CardTitle>
+            <CardSubtitle>
+                @Company.Description
+            </CardSubtitle>
+            <CardText>
+                @Company.Country - @Company.City
+            </CardText>
+            <CardText>
+                Website:
+                <Blazorise.Link
+                    To="@(!string.IsNullOrEmpty(Company.Website) ? Company.Website : null)"
+                    Target="Target.Blank"
+                >
+                    @(!string.IsNullOrEmpty(Company.Email) ? Company.Website : "-")
+                </Blazorise.Link>
+            </CardText>
+            <CardText>
+                Email:
+                <Blazorise.Link
+                    To="@(!string.IsNullOrEmpty(Company.Email) ? $"mailto:{Company.Email}" : null)"
+                    Target="Target.Blank"
+                >
+                    @(!string.IsNullOrEmpty(Company.Email) ? Company.Email : "-")
+                </Blazorise.Link>
+            </CardText>
+        </CardBody>
+
+        <CardActions Class="flex justify-between items-center">
+            <Button Color="Color.Primary" Type="ButtonType.Link" To="@DetailPageUrl">View Details</Button>
+            @if (IsAdmin)
+            {
+                <div class="flex gap-2">
+                    <Button Color="Color.Warning" Outline Clicked="@HandleEdit">
+                        <Icon Name="IconName.Pen"/>
+                    </Button>
+                    <Button Color="Color.Danger" Clicked="@HandleDelete">
+                        <Icon Name="IconName.Delete"/>
+                    </Button>
+                </div>
+            }
+        </CardActions>
+
+        <CardFooter>
+            <Rating
+                Color="Color.Primary"
+                SelectedValue="@AverageRating"
+                SelectedValueChanged="@HandleRatingChanged"
+            />
+
+            @Company.RatingCount Reviews
+        </CardFooter>
+    </CardBody>
+</Card>
