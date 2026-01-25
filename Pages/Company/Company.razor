@@ -1,0 +1,121 @@
+@page "/company/{CompanyId:guid}"
+@using Blazorise.LoadingIndicator
+@using CompanyRatingFrontend.Components.Toast
+@using CompanyRatingFrontend.Data.Company
+@using CompanyRatingFrontend.Pages.Company.Components
+
+<PageTitle>@(Vm.CompanyResponse.Data?.Name ?? "Company")</PageTitle>
+
+@if (Vm.CompanyResponse.IsLoading)
+{
+    <LoadingIndicator Visible="true"/>
+}
+else if (Vm.CompanyResponse.IsError)
+{
+    <div class="flex justify-center items-center w-full h-64">
+        <p class="text-red-600 text-lg">
+            An error occurred while loading companies. Please try again later.
+        </p>
+    </div>
+}
+else
+{
+    <div>
+        <div class="flex justify-between items-center my-4 flex-wrap gap-2">
+            <Heading TextColor="TextColor.Primary" Size="HeadingSize.Is1">
+                @(Vm.CompanyResponse.Data?.Name ?? "-")
+            </Heading>
+
+            <Button Color="Color.Primary" Type="ButtonType.Link" To="/companies">Back to Companies</Button>
+        </div>
+
+        <Table Margin="Margin.Is4.FromTop" Bordered Striped Responsive Background="Background.Dark">
+            <TableHeader Background="Background.Dark">
+                <TableRow Background="Background.Dark">
+                    <TableHeaderCell Background="Background.Dark">Logo</TableHeaderCell>
+                    <TableHeaderCell Background="Background.Dark">Rating</TableHeaderCell>
+                    <TableHeaderCell Background="Background.Dark">Industry</TableHeaderCell>
+                    <TableHeaderCell Background="Background.Dark">Location</TableHeaderCell>
+                    <TableHeaderCell Background="Background.Dark">Address</TableHeaderCell>
+                    <TableHeaderCell Background="Background.Dark">Website</TableHeaderCell>
+                    <TableHeaderCell Background="Background.Dark">Email</TableHeaderCell>
+                </TableRow>
+            </TableHeader>
+            <TableBody Background="Background.Dark">
+                <TableRow Background="Background.Dark">
+                    <TableRowCell Background="Background.Dark">
+                        <Blazorise.Image
+                            Source="@(!string.IsNullOrEmpty(Vm.CompanyResponse.Data?.LogoUrl) ? Vm.CompanyResponse.Data.LogoUrl : "placeholder-company.svg")"
+                            Alt="Company Logo"
+                            Width="Width.Px(100)"
+                            Height="Height.Px(100)"
+                        />
+                    </TableRowCell>
+                    <TableRowCell Background="Background.Dark">
+                        @(ReviewCountText)
+                    </TableRowCell>
+                    <TableRowCell
+                        Background="Background.Dark">@(Vm.CompanyResponse.Data?.Industry.ToDisplayString() ?? "-")</TableRowCell>
+                    <TableRowCell
+                        Background="Background.Dark">@(Vm.CompanyResponse.Data?.Country ?? "-") - @(Vm.CompanyResponse.Data?.City ?? "-")</TableRowCell>
+                    <TableRowCell Background="Background.Dark">@(Vm.CompanyResponse.Data?.Address ?? "-")</TableRowCell>
+                    <TableRowCell Background="Background.Dark">
+                        <Blazorise.Link
+                            To="@(!string.IsNullOrEmpty(Vm.CompanyResponse.Data?.Website) ? Vm.CompanyResponse.Data.Website : null)"
+                            Target="Target.Blank">
+                            @(!string.IsNullOrEmpty(Vm.CompanyResponse.Data?.Website) ? Vm.CompanyResponse.Data.Website : "-")
+                        </Blazorise.Link>
+                    </TableRowCell>
+                    <TableRowCell Background="Background.Dark">
+                        <Blazorise.Link
+                            To="@(!string.IsNullOrEmpty(Vm.CompanyResponse.Data?.Email) ? $"mailto:{Vm.CompanyResponse.Data.Email}" : null)"
+                            Target="Target.Blank">
+                            @(!string.IsNullOrEmpty(Vm.CompanyResponse.Data?.Email) ? Vm.CompanyResponse.Data.Email : "-")
+                        </Blazorise.Link>
+                    </TableRowCell>
+                </TableRow>
+            </TableBody>
+        </Table>
+
+        <div class="my-6">
+            <Heading Size="HeadingSize.Is4" TextColor="TextColor.Body">Description</Heading>
+            <Paragraph>
+                @(Vm.CompanyResponse.Data?.Description ?? "-")
+            </Paragraph>
+        </div>
+
+        <form class="my-6 flex gap-2 justify-start items-center flex-wrap" @onsubmit="OnComment">
+            <TextEdit
+                Placeholder="Comment"
+                @bind-Text="Vm.NewCommentText"
+                class="h-[55px]"
+                Width="Width.Px(300)"
+            />
+
+            <Button
+                Color="Color.Secondary"
+                Type="ButtonType.Submit"
+                class="h-[55px]"
+                Disabled="@Vm.CommentButtonDisabled"
+            >
+                Submit Comment
+            </Button>
+        </form>
+
+        <div class="my-6 flex flex-col gap-4">
+            @foreach (var comment in Vm.CompanyResponse.Data?.Comments ?? [])
+            {
+                <CommentCard Comment="comment" />
+            }
+        </div>
+
+        <GenericToast
+            Header="Error"
+            @bind-Visible="Vm.CommentErrorVisible"
+        >
+            <Body>
+            An error occurred while submitting your comment. Please try again later.
+            </Body>
+        </GenericToast>
+    </div>
+}
