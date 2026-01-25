@@ -41,6 +41,9 @@ builder.Services.AddSingleton<ThemeManager>();
 // ViewModels
 builder.Services.AddScoped<LoginViewModel>();
 builder.Services.AddScoped<RegisterViewModel>();
+builder.Services.AddScoped<CompanyViewModel>();
+builder.Services.AddScoped<CompaniesViewModel>();
+builder.Services.AddScoped<CreateCompanyViewModel>();
 
 var host = builder.Build();
 
