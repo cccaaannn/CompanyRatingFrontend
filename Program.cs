@@ -44,6 +44,7 @@ builder.Services.AddScoped<RegisterViewModel>();
 builder.Services.AddScoped<CompanyViewModel>();
 builder.Services.AddScoped<CompaniesViewModel>();
 builder.Services.AddScoped<CreateCompanyViewModel>();
+builder.Services.AddScoped<UpdateCompanyViewModel>();
 
 var host = builder.Build();
 
