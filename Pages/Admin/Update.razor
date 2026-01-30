@@ -1,0 +1,102 @@
+@page "/company/{CompanyId:guid}/update"
+@using CompanyRatingFrontend.Components.Toast
+@using CompanyRatingFrontend.Data.Company
+
+<PageTitle>Update</PageTitle>
+
+<div>
+    <Heading TextColor="TextColor.Primary" Size="HeadingSize.Is1">
+        Update Company
+    </Heading>
+
+    <form class="my-6 flex flex-col gap-2" @onsubmit="OnCreate">
+        <TextEdit
+            Placeholder="Name*"
+            @bind-Text="Vm.UpdateCompany.Name"
+            class="h-[55px]"
+            Width="Width.Px(300)"
+            MaxLength="1000"
+        />
+        <Select
+            @bind-SelectedValue="Vm.UpdateCompany.Industry"
+            class="h-[55px]"
+            Width="Width.Px(300)"
+        >
+            @foreach (var industry in Enum.GetValues<CompanyIndustry>())
+            {
+                <SelectItem Value="@industry">@industry.ToDisplayString()</SelectItem>
+            }
+        </Select>
+        <TextEdit
+            Placeholder="Description"
+            @bind-Text="Vm.UpdateCompany.Description"
+            class="h-[55px]"
+            Width="Width.Px(300)"
+            MaxLength="5000"
+        />
+        <TextEdit
+            Placeholder="Address"
+            @bind-Text="Vm.UpdateCompany.Address"
+            class="h-[55px]"
+            Width="Width.Px(300)"
+            MaxLength="1000"
+        />
+        <TextEdit
+            Placeholder="City"
+            @bind-Text="Vm.UpdateCompany.City"
+            class="h-[55px]"
+            Width="Width.Px(300)"
+            MaxLength="500"
+        />
+        <TextEdit
+            Placeholder="Country"
+            @bind-Text="Vm.UpdateCompany.Country"
+            class="h-[55px]"
+            Width="Width.Px(300)"
+            MaxLength="500"
+        />
+        <TextEdit
+            Placeholder="Email"
+            @bind-Text="Vm.UpdateCompany.Email"
+            class="h-[55px]"
+            Width="Width.Px(300)"
+            MaxLength="1000"
+            InputMode="TextInputMode.Email"
+        />
+        <TextEdit
+            Placeholder="Website"
+            @bind-Text="Vm.UpdateCompany.Website"
+            class="h-[55px]"
+            Width="Width.Px(300)"
+            MaxLength="1000"
+            InputMode="TextInputMode.Url"
+        />
+        <TextEdit
+            Placeholder="LogoUrl"
+            @bind-Text="Vm.UpdateCompany.LogoUrl"
+            class="h-[55px]"
+            Width="Width.Px(300)"
+            MaxLength="1000"
+            InputMode="TextInputMode.Url"
+        />
+
+        <Button
+            Color="Color.Primary"
+            Type="ButtonType.Submit"
+            class="h-[55px]"
+            Width="Width.Px(300)"
+            Disabled="@Vm.UpdateButtonDisabled"
+        >
+            Update
+        </Button>
+    </form>
+
+    <GenericToast
+        Header="Error"
+        @bind-Visible="Vm.ErrorToastVisible"
+    >
+        <Body>
+        An error occurred while submitting your request.
+        </Body>
+    </GenericToast>
+</div>
