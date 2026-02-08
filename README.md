@@ -22,3 +22,15 @@ Ui for rating companies.
     dotnet run
     ```
 4. Open [http://localhost:5215](http://localhost:5215) in your browser
+
+### Docker
+
+1. Build
+    ```shell
+    docker build -t company-rate-frontend .
+    ```
+2. Run
+    ```shell
+    docker run -d -p 8080:80 --name frontend company-rating-frontend
+    ```
+
